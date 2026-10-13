@@ -1,0 +1,5 @@
+# Isolated fixture, never a real subscription.
+prepend:
+  - DOMAIN-SUFFIX,example.cn,DIRECT
+append: []
+delete: []

@@ -1,0 +1,9 @@
+current: demo
+items:
+  - uid: demo
+    name: Isolated demo
+    option:
+      rules: demo-rules
+  - uid: demo-rules
+    type: rules
+    file: demo-rules.yaml

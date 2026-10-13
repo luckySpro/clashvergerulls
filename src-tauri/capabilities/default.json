@@ -1,0 +1,1 @@
+{"identifier":"default","description":"Local window only; no shell or unrestricted filesystem plugins","windows":["main"],"permissions":["core:default"]}

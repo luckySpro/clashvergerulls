@@ -1,0 +1,4 @@
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies: [DIRECT]

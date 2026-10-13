@@ -1,0 +1,27 @@
+import {test,expect} from '@playwright/test';
+test('offline service editing, personal override, locale and navigation',async({page})=>{
+ await page.goto('/');
+ await expect(page.getByRole('heading',{name:'Claude / Claude Code'})).toBeVisible();
+ await page.locator('#language').selectOption('2');
+ await page.locator('#search').fill('cursor');
+ await expect(page.getByRole('heading',{name:'Cursor',exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Claude / Claude Code'})).toHaveCount(0);
+ await page.getByRole('button',{name:'Edit domains'}).click();
+ await page.locator('#domains-edit').fill('cursor.sh\napi.example.com');
+ await page.locator('#edit-save').click();
+ await expect(page.getByText('api.example.com',{exact:true})).toBeVisible();
+ await page.locator('[data-page="personal"]').click();
+ await page.locator('#domain').fill('macked.app');
+ await page.locator('#add').click();
+ await expect(page.getByRole('cell',{name:'macked.app'})).toBeVisible();
+ await page.locator('#domain').fill('evil.com,DIRECT');
+ await page.locator('#add').click();
+ await expect(page.locator('#message')).toContainText('valid lowercase domain');
+ await page.locator('[data-remove]').click();
+ await expect(page.getByRole('cell',{name:'macked.app'})).toHaveCount(0);
+ await page.locator('[data-page="config"]').click();
+ await expect(page.locator('#preview')).toBeVisible();
+ await page.locator('[data-page="sync"]').click();
+ await expect(page.locator('#repo')).toHaveValue('luckySpro/clashvergerulls');
+ await page.screenshot({path:'test-results/workspace.png',fullPage:true});
+});
