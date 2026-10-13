@@ -10,3 +10,4 @@ src-tauri/icons/android/
 src-tauri/icons/ios/
 *.bak
 .tools/
+src-tauri/gen/
