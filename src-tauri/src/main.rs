@@ -3,6 +3,7 @@ mod core;
 use core::{Catalog, Draft, Preview, Receipt, Result, Snapshot};
 use serde::{Deserialize, Serialize};
 use std::{
+    collections::BTreeMap,
     path::PathBuf,
     sync::{Arc, Mutex},
     time::Duration,
@@ -17,7 +18,52 @@ struct AppState {
 struct Bootstrap {
     candidates: Vec<String>,
     catalog: Catalog,
-    saved: Option<serde_json::Value>,
+    saved: Option<Workspace>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Workspace {
+    schema: u32,
+    language: u8,
+    catalog: Catalog,
+    policies: BTreeMap<String, String>,
+    overrides: BTreeMap<String, Vec<String>>,
+    custom: Vec<core::DomainRule>,
+    china: bool,
+    root: String,
+    repo: String,
+    branch: String,
+    #[serde(default)]
+    proxy: String,
+    receipt: Option<Receipt>,
+}
+fn validate_workspace(w: &Workspace) -> Result<()> {
+    core::validate_catalog(&w.catalog)?;
+    if w.schema != 1
+        || w.language > 3
+        || w.custom.len() > 10000
+        || w.overrides.len() > 100
+        || w.policies.len() > 100
+        || w.root.len() > 4096
+        || w.proxy.len() > 200
+    {
+        return Err("Invalid workspace schema or size".into());
+    }
+    source_url(&w.repo, &w.branch)?;
+    for ds in w.overrides.values() {
+        if ds.is_empty() || ds.len() > 1000 || ds.iter().any(|d| !core::domain_valid(d)) {
+            return Err("Invalid local domain override".into());
+        }
+    }
+    for r in &w.custom {
+        if !core::domain_valid(&r.domain)
+            || r.policy.len() > 200
+            || r.policy.contains([',', '\n', '\r'])
+        {
+            return Err("Invalid personal rule".into());
+        }
+    }
+    Ok(())
 }
 #[derive(Serialize, Deserialize)]
 struct SyncResult {
@@ -39,7 +85,7 @@ fn bootstrap(state: tauri::State<AppState>) -> Result<Bootstrap> {
             candidates.push(p);
         }
     }
-    let saved = if state.data.join("workspace.json").exists() {
+    let saved: Option<Workspace> = if state.data.join("workspace.json").exists() {
         Some(
             serde_json::from_str(&core::read(&state.data.join("workspace.json"))?)
                 .map_err(|e| e.to_string())?,
@@ -47,6 +93,9 @@ fn bootstrap(state: tauri::State<AppState>) -> Result<Bootstrap> {
     } else {
         None
     };
+    if let Some(w) = &saved {
+        validate_workspace(w)?;
+    }
     let catalog: Catalog = serde_json::from_str(include_str!("../../rules/catalog.json"))
         .map_err(|e| e.to_string())?;
     core::validate_catalog(&catalog)?;
@@ -98,7 +147,8 @@ async fn rollback(root: String, receipt: Receipt, state: tauri::State<'_, AppSta
     .map_err(|e| e.to_string())?
 }
 #[tauri::command]
-fn save_workspace(value: serde_json::Value, state: tauri::State<AppState>) -> Result<()> {
+fn save_workspace(value: Workspace, state: tauri::State<AppState>) -> Result<()> {
+    validate_workspace(&value)?;
     let _guard = state
         .operation
         .try_lock()

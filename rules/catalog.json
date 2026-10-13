@@ -2,9 +2,52 @@
   "schema": 1,
   "version": "2026.10.13",
   "services": [
-    {"id":"claude","name":"Claude / Claude Code","source":"https://code.claude.com/docs/en/network-config","domains":["anthropic.com","claude.ai","claude.com","claudeusercontent.com"]},
-    {"id":"openai","name":"OpenAI / Codex / ChatGPT","source":"https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps","domains":["openai.com","chatgpt.com","oaistatic.com","oaiusercontent.com"]},
-    {"id":"cursor","name":"Cursor","source":"https://cursor.com/docs/enterprise/network-configuration","domains":["cursor.com","cursor.sh","cursorapi.com","cursor-cdn.com","cursorvm.com","accounts.spacex.ai","accounts.x.ai","anysphere-binaries.s3.us-east-1.amazonaws.com"]},
-    {"id":"github","name":"GitHub","source":"https://docs.github.com/en/get-started/using-github/troubleshooting-connectivity-problems","domains":["github.com","githubusercontent.com","githubassets.com"]}
+    {
+      "id": "claude",
+      "name": "Claude / Claude Code",
+      "source": "https://code.claude.com/docs/en/network-config",
+      "domains": [
+        "anthropic.com",
+        "claude.ai",
+        "claude.com",
+        "claudeusercontent.com"
+      ]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI / Codex / ChatGPT",
+      "source": "https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps",
+      "domains": [
+        "openai.com",
+        "chatgpt.com",
+        "oaistatic.com",
+        "oaiusercontent.com"
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "source": "https://cursor.com/docs/enterprise/network-configuration",
+      "domains": [
+        "cursor.com",
+        "cursor.sh",
+        "cursorapi.com",
+        "cursor-cdn.com",
+        "cursorvm.com",
+        "accounts.spacex.ai",
+        "accounts.x.ai",
+        "anysphere-binaries.s3.us-east-1.amazonaws.com"
+      ]
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "source": "https://docs.github.com/en/get-started/using-github/troubleshooting-connectivity-problems",
+      "domains": [
+        "github.com",
+        "githubusercontent.com",
+        "githubassets.com"
+      ]
+    }
   ]
 }

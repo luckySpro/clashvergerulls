@@ -23,6 +23,8 @@ Clash Verge Rev 路由管理桌面工具 · Rust + Tauri 2 · **M&J Group** · 4
 5. **在 Clash Verge 内重新加载/重新选择当前订阅，并检查实际规则。** 本工具不自动重启应用、不声称磁盘写入等于内核生效。全局增强和脚本可能改变最终规则顺序。
 6. 「规则同步」输入 `luckySpro/clashvergerulls`、`main`，检查更新并预览后接受。可用提交 SHA 固定来源版本。同步不自动跟踪厂商网站，维护者更新目录后客户端才能取得新规则。
 
+访问 GitHub 较慢时，可以在同步页面填写 `http://127.0.0.1:7897`（按 Clash 实际端口调整）。只支持本机 HTTP 代理，仅影响规则下载，不改系统网络设置。留空使用程序默认网络路径。
+
 写入对象是当前订阅的 **rules 增强文件**，不是临时运行配置，也不是原始远程订阅。新订阅需在 Clash Verge 中创建关联的规则增强，再重新读取、应用。本工具不会把旧订阅规则误写到新订阅。
 
 ### 跨平台位置
@@ -58,6 +60,8 @@ npm run tauri -- build
 只读诊断：`verge-route-studio --inspect <Clash数据目录>`，返回目标规则路径、组名与前置规则，不返回订阅 URL 和节点凭据。
 
 CI 分别构建 macOS ARM64/Intel DMG、Windows x64 NSIS EXE、Linux x64 DEB/AppImage。0.1.0 为开发预览：**无 Apple Developer ID 公证、无 Windows Authenticode 签名**；不会关闭系统安全策略。Windows 无 WebView2 时安装器可能需要联网，Linux 需要兼容 WebKitGTK/系统库。只有已有所需系统组件时才支持终端用户离线安装；安装后域名管理与配置编辑离线可用。
+
+Mac 包使用 ad-hoc 签名保证本地包结构完整，不代表发行者身份认证，也不能替代 Apple 公证。
 
 不提供自动软件升级；新版本从 GitHub Release 手动安装。规则目录同步与软件升级是两个不同机制。
 
